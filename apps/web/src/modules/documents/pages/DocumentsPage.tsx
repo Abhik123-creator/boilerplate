@@ -21,6 +21,7 @@ import { DocumentInspectorPanel, type InspectorPanel } from '../components/Docum
 import { DocumentReader } from '../components/DocumentReader';
 import { DocumentsSidebar } from '../components/DocumentsSidebar';
 import { markdownToHtml } from '../lib/markdown';
+import { pageUrlSegment, resolvePageFromSegment } from '../lib/url';
 
 const EMPTY_SPACE: SpaceForm = { key: '', name: '', description: '' };
 
@@ -45,7 +46,7 @@ export function DocumentsPage() {
   const selectedSpace = spaces.find((s) => s.key === spaceKey || s.id === spaceKey) || spaces[0];
   const selectedSpaceId = selectedSpace?.id || '';
 
-  const selectedPage = pages.find((p) => p.slug === pageSlug || p.id === pageSlug) || pages[0];
+  const selectedPage = resolvePageFromSegment(pages, pageSlug) || pages[0];
   const selectedPageId = selectedPage?.id || '';
 
   const loadPages = useCallback(async () => {
@@ -85,7 +86,7 @@ export function DocumentsPage() {
     if (selectedSpaceId && pages.length > 0 && !pageSlug) {
       const space = spaces.find((s) => s.id === selectedSpaceId);
       if (space && pages[0]) {
-        navigate(`/documents/${space.key}/${pages[0].slug}`, { replace: true });
+        navigate(`/documents/${space.key}/${pageUrlSegment(pages[0])}`, { replace: true });
       }
     }
   }, [spaceKey, pageSlug, spaces, pages, selectedSpaceId, navigate]);
@@ -174,7 +175,7 @@ export function DocumentsPage() {
       setPages((current) => [...current, page]);
       const space = spaces.find((s) => s.id === selectedSpaceId);
       if (space) {
-        navigate(`/documents/${space.key}/${page.slug}`);
+        navigate(`/documents/${space.key}/${pageUrlSegment(page)}`);
       }
       setIsEditing(true);
     } catch (err) {
@@ -201,7 +202,7 @@ export function DocumentsPage() {
       setIsEditing(false);
       const space = spaces.find((s) => s.id === selectedSpaceId);
       if (space) {
-        navigate(`/documents/${space.key}/${page.slug}`, { replace: true });
+        navigate(`/documents/${space.key}/${pageUrlSegment(page)}`, { replace: true });
       }
       showToast('Page saved', 'success');
     } catch (err) {
@@ -249,7 +250,7 @@ export function DocumentsPage() {
     const page = pages.find((p) => p.id === pageId);
     const space = spaces.find((s) => s.id === selectedSpaceId);
     if (page && space) {
-      navigate(`/documents/${space.key}/${page.slug}`);
+      navigate(`/documents/${space.key}/${pageUrlSegment(page)}`);
     }
   }
 

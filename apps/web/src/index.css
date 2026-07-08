@@ -5953,7 +5953,7 @@ input[type='checkbox'] {
 .documents-reader h1,
 .documents-title-input {
   width: 100%;
-  margin: 0 0 18px;
+  margin: 0;
   border: 0;
   outline: 0;
   background: transparent;
@@ -5962,6 +5962,10 @@ input[type='checkbox'] {
   font-weight: 850;
   letter-spacing: -0.02em;
   line-height: 1.15;
+}
+
+.documents-reader h1 {
+  margin-bottom: 18px;
 }
 
 .documents-preview {
@@ -5999,7 +6003,15 @@ input[type='checkbox'] {
 .documents-editor {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+}
+
+.documents-editor__header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
 }
 
 .documents-editor__row {
@@ -6009,6 +6021,12 @@ input[type='checkbox'] {
 
 .documents-editor__row > * {
   flex: 1;
+}
+
+.documents-editor__row .ui-pills-input__delete-spaces {
+  color: var(--text-muted);
+  font-size: 11px;
+  opacity: 0.7;
 }
 
 .documents-markdown-editor {
@@ -6042,36 +6060,43 @@ input[type='checkbox'] {
 
 .documents-rich-editor__toolbar {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-soft);
   padding: 8px 10px;
 }
 
 .documents-rich-editor__toolbar button {
-  min-width: 34px;
-  height: 30px;
-  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
   border-radius: 6px;
-  background: var(--surface);
+  background: transparent;
   color: var(--text-muted);
-  font: inherit;
-  font-size: 13px;
   cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
 
 .documents-rich-editor__toolbar button:hover {
-  border-color: var(--accent);
+  border-color: var(--border);
+  background: var(--surface);
   color: var(--accent);
+}
+
+.documents-rich-editor__toolbar button:active {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
 }
 
 .documents-rich-editor__input {
   flex: 1;
-  min-height: 260px;
-  padding: 16px 20px 80px;
+  min-height: 320px;
+  padding: 20px 24px 80px;
   color: var(--text);
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.75;
   outline: 0;
   overflow-y: auto;
 }

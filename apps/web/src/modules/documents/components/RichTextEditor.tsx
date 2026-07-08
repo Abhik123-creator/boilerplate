@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
+import { Bold, Italic, Underline, List, Quote } from 'lucide-react';
 
 const COMMANDS = [
-  { command: 'bold', label: 'B' },
-  { command: 'italic', label: 'I' },
-  { command: 'underline', label: 'U' },
-  { command: 'insertUnorderedList', label: 'List' },
-  { command: 'formatBlock', label: 'Quote', value: 'blockquote' },
+  { command: 'bold', label: 'Bold', icon: Bold },
+  { command: 'italic', label: 'Italic', icon: Italic },
+  { command: 'underline', label: 'Underline', icon: Underline },
+  { command: 'insertUnorderedList', label: 'Bulleted list', icon: List },
+  { command: 'formatBlock', label: 'Quote', icon: Quote, value: 'blockquote' },
 ] as const;
 
 export function RichTextEditor({
@@ -152,9 +153,11 @@ export function RichTextEditor({
           <button
             key={`${item.command}-${item.label}`}
             type="button"
+            title={item.label}
+            aria-label={item.label}
             onClick={() => runCommand(item.command, 'value' in item ? item.value : undefined)}
           >
-            {item.label}
+            <item.icon size={15} />
           </button>
         ))}
       </div>

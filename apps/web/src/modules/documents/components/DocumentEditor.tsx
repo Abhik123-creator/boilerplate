@@ -8,19 +8,21 @@ export function DocumentEditor({ draft, onChange }: {
 }) {
   return (
     <section className="documents-editor" aria-label="Edit document">
-      <Input
-        className="documents-title-input"
-        value={draft.title}
-        onChange={(event) => onChange({ ...draft, title: event.target.value })}
-        placeholder="Untitled"
-      />
-      <div className="documents-editor__row">
-        <PillsInput
-          label="Labels"
-          value={draft.labels}
-          onChange={(labels) => onChange({ ...draft, labels })}
-          placeholder="policy, onboarding"
+      <div className="documents-editor__header">
+        <Input
+          className="documents-title-input"
+          value={draft.title}
+          onChange={(event) => onChange({ ...draft, title: event.target.value })}
+          placeholder="Untitled"
         />
+        <div className="documents-editor__row">
+          <PillsInput
+            label="Labels"
+            value={draft.labels}
+            onChange={(labels) => onChange({ ...draft, labels })}
+            placeholder="Add a label and press Enter"
+          />
+        </div>
       </div>
       <RichTextEditor
         key={draft.id}
