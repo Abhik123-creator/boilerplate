@@ -26,7 +26,7 @@ jobs:
       SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -87,7 +87,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Prepare report directory
         run: mkdir -p security-reports
