@@ -1,10 +1,20 @@
 # syntax=docker/dockerfile:1
 
 FROM node:26-alpine AS web-build
-RUN npm i -g pnpm@11.8.0
+RUN npm i -g pnpm@11.10.0
 WORKDIR /repo
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY apps/mobile/package.json ./apps/mobile/package.json
+COPY packages/ui-common/package.json ./packages/ui-common/package.json
+COPY packages/contracts ./packages/contracts
+COPY tsconfig.base.json ./tsconfig.base.json
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  pnpm config set store-dir /pnpm/store \
+  && pnpm config set fetch-timeout 600000 \
+  && pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm install --frozen-lockfile
 ENV VITE_API_URL=/api/v1
 RUN pnpm --filter web... build
 

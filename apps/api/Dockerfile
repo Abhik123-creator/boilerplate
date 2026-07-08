@@ -4,7 +4,7 @@
 # because this is a pnpm workspace — apps/api's lockfile lives at the root.
 
 FROM node:26-alpine AS base
-RUN npm i -g pnpm@11.8.0
+RUN npm i -g pnpm@11.10.0
 WORKDIR /repo
 
 FROM base AS build
@@ -21,7 +21,10 @@ COPY packages/ui-common/package.json ./packages/ui-common/package.json
 # manifest) has to be present at install time too.
 COPY packages/contracts ./packages/contracts
 COPY tsconfig.base.json ./tsconfig.base.json
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  pnpm config set store-dir /pnpm/store \
+  && pnpm config set fetch-timeout 600000 \
+  && pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm --filter api... build
 # Prunes to production-only deps and resolves the workspace's symlinked

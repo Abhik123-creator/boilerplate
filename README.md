@@ -17,15 +17,7 @@ A robust, modular, multi-tenant boilerplate designed to accelerate scalable soft
 
 ## Community
 
-[View stargazers](https://github.com/sumitkar-in/boilerplate/stargazers) · [View forks](https://github.com/sumitkar-in/boilerplate/network/members)
-
-### Stargazers
-
-[![Stargazers repo roster for @sumitkar-in/boilerplate](https://reporoster.com/stars/sumitkar-in/boilerplate)](https://github.com/sumitkar-in/boilerplate/stargazers)
-
-### Forks
-
-[![Forkers repo roster for @sumitkar-in/boilerplate](https://reporoster.com/forks/sumitkar-in/boilerplate)](https://github.com/sumitkar-in/boilerplate/network/members)
+[View stargazers](https://github.com/sumitkar-in/boilerplate/stargazers) · [View forks](https://github.com/sumitkar-in/boilerplate/network/members) · [View contributors](https://github.com/sumitkar-in/boilerplate/graphs/contributors)
 
 ---
 
