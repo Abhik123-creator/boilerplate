@@ -234,19 +234,13 @@ export const PillsInput: React.FC<PillsInputProps> = ({
 }) => {
   const inputId = id || (label ? `pills-input-${label.replace(/\s+/g, '-').toLowerCase()}` : undefined);
   const [inputValue, setInputValue] = React.useState('');
-  const [deleteSpaces, setDeleteSpaces] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const addPill = (text: string) => {
-    let cleanText = text;
-    if (deleteSpaces) {
-      cleanText = cleanText.replace(/\s+/g, '');
-    }
-    cleanText = cleanText.trim();
-    
-    const parts = cleanText
+    const parts = text
+      .trim()
       .split(',')
-      .map((p) => (deleteSpaces ? p.replace(/\s+/g, '') : p).trim())
+      .map((p) => p.trim())
       .filter((p) => p.length > 0);
 
     if (parts.length === 0) return;
@@ -286,7 +280,7 @@ export const PillsInput: React.FC<PillsInputProps> = ({
     if (val.endsWith(',')) {
       addPill(val.slice(0, -1));
     } else {
-      setInputValue(deleteSpaces ? val.replace(/\s+/g, '') : val);
+      setInputValue(val);
     }
   };
 
@@ -337,26 +331,12 @@ export const PillsInput: React.FC<PillsInputProps> = ({
           disabled={disabled}
         />
       </div>
-      <div className="ui-pills-input__footer">
-        <div className="ui-pills-input__footer-left">
+      {(error || helperText) && (
+        <div className="ui-pills-input__footer">
           {error && <span className="ui-field__error">{error}</span>}
           {!error && helperText && <span className="ui-field__hint">{helperText}</span>}
         </div>
-        <label className="ui-pills-input__delete-spaces">
-          <input
-            type="checkbox"
-            checked={deleteSpaces}
-            onChange={(e) => {
-              setDeleteSpaces(e.target.checked);
-              if (e.target.checked && inputValue) {
-                setInputValue(inputValue.replace(/\s+/g, ''));
-              }
-            }}
-            disabled={disabled}
-          />
-          <span>Delete spaces</span>
-        </label>
-      </div>
+      )}
     </div>
   );
 };

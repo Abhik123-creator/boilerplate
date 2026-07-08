@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Clock3, Edit3, FileText, MessageSquare, Plus, Save, X } from 'lucide-react';
-import { Button, useToast } from '@boilerplate/ui-common';
+import { Button, ConfirmDialog, useToast } from '@boilerplate/ui-common';
 import {
   addDocumentComment,
   createPage,
   createSpace,
+  deletePage,
+  deleteSpace,
   getPage,
   listPages,
   listSpaces,
@@ -41,6 +43,10 @@ export function DocumentsPage() {
   const [activePanel, setActivePanel] = useState<InspectorPanel | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [comment, setComment] = useState('');
+  const [pendingDelete, setPendingDelete] = useState<
+    { type: 'space'; id: string; name: string } | { type: 'page'; id: string; name: string } | null
+  >(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Derived state from URL parameters
   const selectedSpace = spaces.find((s) => s.key === spaceKey || s.id === spaceKey) || spaces[0];
@@ -254,6 +260,44 @@ export function DocumentsPage() {
     }
   }
 
+  function requestDeleteSpace(spaceId: string) {
+    const space = spaces.find((s) => s.id === spaceId);
+    if (space) setPendingDelete({ type: 'space', id: space.id, name: space.name });
+  }
+
+  function requestDeletePage(pageId: string) {
+    const page = pages.find((p) => p.id === pageId);
+    if (page) setPendingDelete({ type: 'page', id: page.id, name: page.title });
+  }
+
+  async function confirmDelete() {
+    if (!pendingDelete) return;
+    setIsDeleting(true);
+    try {
+      if (pendingDelete.type === 'space') {
+        await deleteSpace(pendingDelete.id);
+        const remaining = spaces.filter((s) => s.id !== pendingDelete.id);
+        setSpaces(remaining);
+        if (selectedSpaceId === pendingDelete.id) {
+          navigate(remaining[0] ? `/documents/${remaining[0].key}` : '/documents', { replace: true });
+        }
+      } else {
+        await deletePage(pendingDelete.id);
+        await loadPages();
+        if (selectedPageId === pendingDelete.id) {
+          const space = spaces.find((s) => s.id === selectedSpaceId);
+          if (space) navigate(`/documents/${space.key}`, { replace: true });
+        }
+      }
+      showToast(`${pendingDelete.type === 'space' ? 'Space' : 'Page'} deleted`, 'success');
+      setPendingDelete(null);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not delete', 'error');
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   function startEditing() {
     if (!detail) return;
     setDraft(detail);
@@ -273,10 +317,12 @@ export function DocumentsPage() {
         selectedSpaceId={selectedSpaceId}
         onSelectSpace={selectSpace}
         onCreateSpace={() => setIsSpaceModalOpen(true)}
+        onDeleteSpace={requestDeleteSpace}
         pages={pages}
         selectedPageId={selectedPageId}
         onSelectPage={selectPage}
         onCreatePage={(parentId) => void createChildPage(parentId)}
+        onDeletePage={requestDeletePage}
         search={search}
         onSearchChange={setSearch}
         label={label}
@@ -363,6 +409,21 @@ export function DocumentsPage() {
         onChange={setSpaceForm}
         onClose={() => setIsSpaceModalOpen(false)}
         onSave={() => void saveSpace()}
+      />
+
+      <ConfirmDialog
+        isOpen={pendingDelete !== null}
+        title={pendingDelete?.type === 'space' ? 'Delete space' : 'Delete page'}
+        message={
+          pendingDelete?.type === 'space'
+            ? `Delete "${pendingDelete.name}" and all of its pages? This can't be undone.`
+            : `Delete "${pendingDelete?.name}" and any sub-pages? This can't be undone.`
+        }
+        confirmLabel="Delete"
+        danger
+        isConfirming={isDeleting}
+        onConfirm={() => void confirmDelete()}
+        onCancel={() => setPendingDelete(null)}
       />
     </section>
   );

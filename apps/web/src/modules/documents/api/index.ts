@@ -71,6 +71,10 @@ export function createSpace(input: { key: string; name: string; description?: st
   return apiFetch<DocSpace>('/documents/spaces', { method: 'POST', body: input });
 }
 
+export function deleteSpace(id: string): Promise<{ ok: true }> {
+  return apiFetch<{ ok: true }>(`/documents/spaces/${id}`, { method: 'DELETE' });
+}
+
 export function listPages(params: { spaceId?: string; search?: string; label?: string } = {}): Promise<{ rows: DocumentPage[]; total: number; limit: number; offset: number }> {
   return apiFetch(`/documents/pages${buildQueryString({
     spaceId: params.spaceId,

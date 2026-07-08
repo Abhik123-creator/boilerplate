@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { and, asc, eq, sql, type SQL } from 'drizzle-orm';
+import { and, asc, eq, inArray, sql, type SQL } from 'drizzle-orm';
 import sanitizeHtml from 'sanitize-html';
 import { CACHE_TTLS, CacheService } from '../../core/cache/cache.service';
 import { assertFound, listAndCount } from '../../core/common/crud/crud.helpers';
@@ -288,13 +288,38 @@ export class DocumentsService {
   }
 
   async removePage(tenant: TenantContext, id: string) {
+    return this.tenantDb.withTenantDb(tenant, async (db) => {
+      // parent_id has no FK/cascade, so descendants must be collected and deleted explicitly.
+      const idsToDelete = new Set<string>([id]);
+      let frontier = [id];
+      while (frontier.length > 0) {
+        const children = await db
+          .select({ id: documentPage.id })
+          .from(documentPage)
+          .where(inArray(documentPage.parentId, frontier));
+        frontier = children
+          .map((c) => c.id)
+          .filter((childId) => !idsToDelete.has(childId));
+        frontier.forEach((childId) => idsToDelete.add(childId));
+      }
+      const rows = await db
+        .delete(documentPage)
+        .where(inArray(documentPage.id, Array.from(idsToDelete)))
+        .returning({ id: documentPage.id });
+      assertFound(rows[0], 'Page');
+      return { ok: true };
+    });
+  }
+
+  async removeSpace(tenant: TenantContext, id: string) {
     const [row] = await this.tenantDb.withTenantDb(tenant, (db) =>
       db
-        .delete(documentPage)
-        .where(eq(documentPage.id, id))
-        .returning({ id: documentPage.id }),
+        .delete(docSpace)
+        .where(eq(docSpace.id, id))
+        .returning({ id: docSpace.id }),
     );
-    assertFound(row, 'Page');
+    assertFound(row, 'Space');
+    await this.invalidateSpaces(tenant);
     return { ok: true };
   }
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { FileText, Plus, Search } from 'lucide-react';
+import { FileText, Plus, Search, Trash2 } from 'lucide-react';
 import { Input } from '@boilerplate/ui-common';
 import type { DocSpace, DocumentPage } from '../api';
 
@@ -21,10 +21,12 @@ export function DocumentsSidebar({
   selectedSpaceId,
   onSelectSpace,
   onCreateSpace,
+  onDeleteSpace,
   pages,
   selectedPageId,
   onSelectPage,
   onCreatePage,
+  onDeletePage,
   search,
   onSearchChange,
   label,
@@ -34,10 +36,12 @@ export function DocumentsSidebar({
   selectedSpaceId: string;
   onSelectSpace: (spaceId: string) => void;
   onCreateSpace: () => void;
+  onDeleteSpace: (spaceId: string) => void;
   pages: DocumentPage[];
   selectedPageId: string;
   onSelectPage: (pageId: string) => void;
   onCreatePage: (parentId?: string | null) => void;
+  onDeletePage: (pageId: string) => void;
   search: string;
   onSearchChange: (value: string) => void;
   label: string;
@@ -55,15 +59,24 @@ export function DocumentsSidebar({
       </div>
       <div className="documents-space-list">
         {spaces.map((space) => (
-          <button
-            key={space.id}
-            type="button"
-            aria-pressed={space.id === selectedSpaceId}
-            onClick={() => onSelectSpace(space.id)}
-          >
-            <span>{space.key}</span>
-            <strong>{space.name}</strong>
-          </button>
+          <div key={space.id} className="documents-space-item">
+            <button
+              type="button"
+              aria-pressed={space.id === selectedSpaceId}
+              onClick={() => onSelectSpace(space.id)}
+            >
+              <span>{space.key}</span>
+              <strong>{space.name}</strong>
+            </button>
+            <button
+              type="button"
+              className="documents-space-item__delete"
+              onClick={() => onDeleteSpace(space.id)}
+              aria-label={`Delete ${space.name}`}
+            >
+              <Trash2 size={13} />
+            </button>
+          </div>
         ))}
       </div>
       <label className="documents-search">
@@ -85,6 +98,7 @@ export function DocumentsSidebar({
             selectedPageId={selectedPageId}
             onSelect={onSelectPage}
             onCreateChild={onCreatePage}
+            onDelete={onDeletePage}
           />
         ))}
       </div>
@@ -92,11 +106,12 @@ export function DocumentsSidebar({
   );
 }
 
-function PageTreeItem({ page, selectedPageId, onSelect, onCreateChild }: {
+function PageTreeItem({ page, selectedPageId, onSelect, onCreateChild, onDelete }: {
   page: TreePage;
   selectedPageId: string;
   onSelect: (id: string) => void;
   onCreateChild: (id: string) => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <div className="documents-tree-item">
@@ -105,6 +120,9 @@ function PageTreeItem({ page, selectedPageId, onSelect, onCreateChild }: {
       </button>
       <button type="button" className="documents-tree-add" onClick={() => onCreateChild(page.id)} aria-label={`Create child page under ${page.title}`}>
         <Plus size={12} />
+      </button>
+      <button type="button" className="documents-tree-delete" onClick={() => onDelete(page.id)} aria-label={`Delete ${page.title}`}>
+        <Trash2 size={12} />
       </button>
       {page.children.length > 0 && (
         <div className="documents-tree-children">
@@ -115,6 +133,7 @@ function PageTreeItem({ page, selectedPageId, onSelect, onCreateChild }: {
               selectedPageId={selectedPageId}
               onSelect={onSelect}
               onCreateChild={onCreateChild}
+              onDelete={onDelete}
             />
           ))}
         </div>

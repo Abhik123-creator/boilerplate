@@ -42,6 +42,12 @@ export class DocumentsController {
     return this.documentsService.updateSpace(tenant, id, dto);
   }
 
+  @Delete('spaces/:id')
+  @Permissions('modules:delete')
+  removeSpace(@CurrentTenant() tenant: TenantContext, @Param('id') id: string) {
+    return this.documentsService.removeSpace(tenant, id);
+  }
+
   @Get('pages')
   @Permissions('modules:read')
   @ApiOkResponse({ description: 'Lists documentation pages.' })
