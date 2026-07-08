@@ -8,10 +8,24 @@
 ![TypeScript](https://img.shields.io/badge/typescript-passing-brightgreen)
 ![pnpm](https://img.shields.io/badge/pnpm-11-orange)
 ![License](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)
+[![GitHub stars](https://img.shields.io/github/stars/sumitkar-in/boilerplate?style=social)](https://github.com/sumitkar-in/boilerplate/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/sumitkar-in/boilerplate?style=social)](https://github.com/sumitkar-in/boilerplate/network/members)
 
 A robust, modular, multi-tenant boilerplate designed to accelerate scalable software development. Features a high-performance **NestJS REST API**, a **React + Vite** web application, and a cross-platform **React Native / Expo** mobile application — all wired together in a pnpm monorepo.
 
 [Read more about this project on DeepWiki.](https://deepwiki.com/sumitkar-in/boilerplate)
+
+## Community
+
+[View stargazers](https://github.com/sumitkar-in/boilerplate/stargazers) · [View forks](https://github.com/sumitkar-in/boilerplate/network/members)
+
+### Stargazers
+
+[![Stargazers repo roster for @sumitkar-in/boilerplate](https://reporoster.com/stars/sumitkar-in/boilerplate)](https://github.com/sumitkar-in/boilerplate/stargazers)
+
+### Forks
+
+[![Forkers repo roster for @sumitkar-in/boilerplate](https://reporoster.com/forks/sumitkar-in/boilerplate)](https://github.com/sumitkar-in/boilerplate/network/members)
 
 ---
 
