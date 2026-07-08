@@ -3,7 +3,7 @@
 # Built from the repo root (see infra/docker/docker-compose.yml `context: ../..`)
 # because this is a pnpm workspace — apps/api's lockfile lives at the root.
 
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 RUN corepack enable && corepack prepare pnpm@11.8.0 --activate
 WORKDIR /repo
 
