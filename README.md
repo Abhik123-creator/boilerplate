@@ -21,7 +21,7 @@ A robust, modular, multi-tenant boilerplate designed to accelerate scalable soft
 
 ---
 
-## ⚡ Create a New Project
+## ⚡ Create a New Project.
 
 Scaffold a fresh project from this template with a **single `npx` command** — no cloning or manual renaming needed.
 
