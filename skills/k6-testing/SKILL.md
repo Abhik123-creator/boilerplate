@@ -7,6 +7,19 @@ description: Generates k6 end-to-end performance and functional tests. Use this 
 
 When the user requests to create or add k6 tests for modules, follow these instructions to maintain consistency across the test suite.
 
+## Generate first — don't hand-write scenarios
+
+Standard CRUD scenarios are generated, not written. Follow `skills/code-generation`: confirm the model, route base path, and fields with the user, then run:
+
+```bash
+pnpm generate:k6-scenario --model=employee --fields=name:string,phone:phone,email:email
+pnpm generate:k6-scenario --model="sales order" --module=sales-orders --base-path=/sales-orders --fields=number:string,total:number
+```
+
+`--fields` uses the same syntax as `generate:crud`, so reuse the exact arguments from the CRUD generation. The script writes `tests/k6/scenarios/<model>.js` (create/list/update/delete with `check()`s) and wires the import + call block into `tests/k6/main.js` at the `generated scenario` marker comments. Don't read the generated files back.
+
+Hand-write scenario code only for flows the generator can't express (multi-step workflows, file uploads, websocket, custom auth) — and even then, generate the CRUD base first and extend it, following the rules below.
+
 ## Directory Structure
 All k6 testing assets are located in `tests/k6`. 
 - `tests/k6/utils/`: Shared utilities like `api.js` (for HTTP wrappers), `config.js` (for environment configurations), and `auth.js` (for login/impersonation logic).

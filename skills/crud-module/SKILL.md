@@ -7,6 +7,10 @@ description: Generate tenant-scoped NestJS CRUD endpoints and matching web UI pa
 
 Use this when adding a simple tenant-scoped CRUD model that needs API endpoints and a web page.
 
+## Before generating — confirm the spec
+
+Follow `skills/code-generation`: present the model name, module/route key, page template (default `page-view-table-list`), and a compact field table (name + type), plus the exact command you will run — and wait for the user's confirmation before running it. Never hand-write the files this generator produces, and don't read them back after a successful run.
+
 ## Command
 
 ```bash
